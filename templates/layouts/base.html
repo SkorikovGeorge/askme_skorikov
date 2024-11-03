@@ -1,0 +1,98 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href={% static "css/bootstrap.min.css" %} rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+        <div class="container-fluid d-flex justify-content-between">
+            <a class="navbar-brand" href={% url 'index' %}>AskMe</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <a href={% url 'ask' %}><button class="btn btn-outline-success" type="button">Ask!</button></a>
+            </form>
+            <!-- Для пользователя без регистрации
+            <div class="d-flex align-items-center gap-2 m-2">
+                <a href={% url 'login' %}>Log In</a>
+                <a href={% url 'signup' %}>Register</a>
+            </div>
+            -->
+            <div class="d-flex gap-2">
+                <img src={% static "img/cat_pfp.jpg" %} alt="Avatar" class="img-thumbnail" style="width: 50px; height: 50px;">
+                <div>
+                    <div>
+                        Dr.Pepper
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href={% url 'settings' %}>Settings</a>
+                        <a href={% url 'login' %}>Log Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+<main class="container-fluid flex-grow-1 px-4">
+    <div class="d-flex gap-3 align-items-center mt-3">
+    {% block heading %}
+
+    {% endblock %}
+    </div>
+
+    <div class="row">
+        <div class="col-10 mt-3">
+            <div class="d-flex flex-column gap-3 align-items-center">
+            {% block content %}
+            
+            {% endblock %}
+            </div>
+        </div>
+        <div class="col-2 mt-3">
+            <div class="d-flex flex-column gap-4">
+                <div class="d-flex flex-column">
+                    <h3>Popular Tags</h3>
+                    <div class="flex-wrap"> 
+                        <a href={% url 'tag' 'perl' %}><button type="button" class="badge text-bg-primary border-0 text-center">perl</button></a>
+                        <a href={% url 'tag' 'python' %}><button type="button" class="badge text-bg-secondary border-0 text-center">python</button></a>
+                        <a href={% url 'tag' 'TechnoPark' %}><button type="button" class="badge text-bg-success border-0 text-center">TechnoPark</button></a>
+                        <a href={% url 'tag' 'MySQL' %}><button type="button" class="badge text-bg-danger border-0 text-center">MySQL</button></a>
+                        <a href={% url 'tag' 'django' %}><button type="button" class="badge text-bg-warning border-0 text-center">django</button></a>
+                        <a href={% url 'tag' 'Mail.Ru' %}><button type="button" class="badge text-bg-info border-0 text-center">Mail.Ru</button></a>
+                        <a href={% url 'tag' 'Voloshin' %}><button type="button" class="badge text-bg-light border-0 text-center">Voloshin</button></a>                           <a href={% url 'tag' 'Firefox' %}><button type="button" class="badge text-bg-dark border-0 text-center">Firefox</button>
+                        <a href={% url 'tag' 'C++' %}><button type="button" class="badge text-bg-primary border-0 text-center">C++</button></a>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column">
+                    <h3>Best Members</h3>
+                    <div class="d-flex flex-column gap-1">
+                        <a href="#">Mr.Freeman</a>
+                        <a href="#">Dr.House</a>
+                        <a href="#">Bender</a>
+                        <a href="#">Queen Victoria</a>
+                        <a href="#">V.Pupkin</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="mt-5">
+    <div class="d-flex justify-content-around align-items-center bg-body-tertiary border-top">
+        <p>This is footer.</p>
+    </div>
+</footer>
+
+<script src={% static "js/bootstrap.bundle.min.js" %}></script>
+</body>
+</html>

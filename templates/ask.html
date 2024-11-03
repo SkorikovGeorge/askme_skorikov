@@ -1,0 +1,43 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block heading %}
+<h2>New Question</h2>
+<div class="badge text-bg-danger text-wrap">
+    Input fields cannot be left blank!
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-3 w-100">
+    <form class="was-validated col-5">
+        <div class="mb-3">
+            <label for="InputTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="InputTitle" maxlength="35"
+                   aria-describedby="title" required>
+            <div class="invalid-feedback">
+                Please enter a title.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="QuestionTextarea" class="form-label">Text</label>
+            <textarea class="form-control" id="QuestionTextarea" rows="7" maxlength="300" style="max-height: 500px;" required></textarea>
+            <div class="invalid-feedback">
+                Please enter your question.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="InputTags" class="form-label">Tags</label>
+            <input type="text" class="form-control" id="InputTags" maxlength="35"
+                   aria-describedby="tags" required>
+            <div class="invalid-feedback">
+                Please provide tags. 
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-secondary">Ask!</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block heading %}
+<h2>Settings: LoggedProfile</h2>
+<div class="badge text-bg-danger text-wrap">
+    Sorry, this nickname already registred!!
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-3 w-100">
+    <form class="was-validated col-5">
+        <div class="mb-3">
+            <label for="InputLogin" class="form-label">Login</label>
+            <input type="text" class="form-control" id="InputLogin" value="dr_pepper" maxlength="35"
+                   aria-describedby="login" required>
+            <div class="invalid-feedback">
+                Please enter a login.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="InputEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="InputEmail" value="dr.pepper@mail.ru" maxlength="35"
+                   aria-describedby="email" required>
+            <div class="invalid-feedback">
+                Please enter an email.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="InputNickname" class="form-label">Nickname</label>
+            <input type="text" class="form-control" id="InputNickname" value="Dr.Pepper" maxlength="35"
+                   aria-describedby="nickname" required>
+            <div class="invalid-feedback">
+                Please enter a nickname.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Upload avatar</label>
+            <div class="d-flex mb-3">
+                <img class="img-thumbnail" src={% static "img/cat_pfp.jpg" %} alt="Avatar" style="width: 150px; height: 150px;">
+            </div>
+            <input class="form-control" type="file" id="formFile" required>
+            <div class="invalid-feedback">
+                Please select a file.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-secondary">Save</button>
+    </form>
+</div>
+{% endblock %}

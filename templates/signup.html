@@ -1,0 +1,69 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block heading %}
+<h2>Registration</h2>
+<div class="badge text-bg-danger text-wrap">
+    Sorry, this email address already registred!!
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-3 w-100">
+    <form class="was-validated col-5">
+        <div class="mb-3">
+            <label for="InputLogin" class="form-label">Login</label>
+            <input type="text" class="form-control" id="InputLogin" maxlength="35"
+                    aria-describedby="login" required>
+            <div class="invalid-feedback">
+                Please enter a login.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="InputEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="InputEmail" maxlength="35"
+                    aria-describedby="email" required>
+            <div class="invalid-feedback">
+                Please enter an email.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="InputNickname" class="form-label">Nickname</label>
+            <input type="text" class="form-control" id="InputNickname" maxlength="35"
+                    aria-describedby="nickname" required>
+            <div class="invalid-feedback">
+                Please enter a nickname.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="InputPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="InputPassword" maxlength="35" required>
+            <div class="invalid-feedback">
+                Please enter a password.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="InputRepeatPassword" class="form-label">Repeat password</label>
+            <input type="password" class="form-control" id="InputRepeatPassword" maxlength="35" required>
+            <div class="invalid-feedback">
+                Please repeat your password.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Upload avatar</label>
+            <input class="form-control" type="file" id="formFile" required>
+            <div class="invalid-feedback">
+                Please select a file.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-secondary">Register</button>
+    </form>
+</div>
+{% endblock %}
+

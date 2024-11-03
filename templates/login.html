@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block heading %}
+<h2>Log In</h2>
+<div class="badge text-bg-danger text-wrap">
+    Sorry, wrong password!
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-3 w-100">
+    <form class="was-validated col-5">
+        <div class="mb-3">
+            <label for="InputEmail" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="InputEmail" maxlength="35"
+                aria-describedby="email" required>
+            <div class="invalid-feedback">
+                Please enter an email.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="InputPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="InputPassword" maxlength="35" required>
+            <div class="invalid-feedback">
+                Please enter a password.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-secondary">Submit</button>
+    </form>
+    <a href={% url 'signup' %}>Don't have an account? Create new</a>
+</div>
+{% endblock %}

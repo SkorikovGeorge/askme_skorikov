@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block heading %}
+<h2>Tag: {{ tag_name }}</h2>
+{% endblock %}
+
+{% block content %}
+    {% for question in questions %}
+    {% include "layouts/card.html" %}
+    {% endfor %}
+
+    {% include 'layouts/pagination.html' %}
+{% endblock %}
