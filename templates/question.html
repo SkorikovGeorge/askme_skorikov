@@ -9,17 +9,20 @@
                     <div style="width: 150px; height: 150px;">
                         <img class="img-thumbnail" src={% static "img/cat_pfp.jpg" %} alt="CardIcon">
                     </div>
-                    <input type="number" class="form-control form-control-sm text-center" placeholder="5"
-                            style="width: 50px; height: 30px;" aria-label="Number input">
+                    {% comment %} <input type="number" class="form-control form-control-sm text-center" placeholder="5"
+                            style="width: 50px; height: 30px;" aria-label="Number input"> {% endcomment %}
+                    <input type="text" class="form-control form-control-sm text-center border border-dark" 
+                        value="{{ question.likes }}" style="width: 50px; height: 30px;" readonly>
                 </div>
                 <div>
                     <h2 class="card-title">{{ question.title }}</h2>
                     <p class="card-text">{{ question.text }}</p>
-                    <a href={% url 'question' question.id %} class="card-link">Answer (3)</a>
+                    <a href={% url 'question' question.id %} class="card-link">Answers({{ question.count_answers }})</a>
                     <div class="d-flex gap-2">
                         Tags:
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
+                        {% for tag in question.tags.all %}
+                        <a href={% url 'tag' tag.title %} class="card-link m-0">{{ tag.title }}</a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -34,10 +37,10 @@
     </div>
 
 {% for answer in answers %}
-{% include "layouts/card.html"%}
+{% include "components/card.html"%}
 {% endfor %}
 
-{% include 'layouts/pagination.html' %}
+{% include 'components/pagination.html' %}
 
 <div class="d-flex flex-column gap-2 w-100">
     <div>
@@ -47,4 +50,12 @@
     <button type="submit" class="btn btn-secondary">Answer</button>
 </div>
 
+{% endblock %}
+
+{% block popular_tags %}
+    {% include "components/popular_tags.html" %}
+{% endblock %}
+
+{% block best_members %}
+    {% include "components/best_members.html" %}
 {% endblock %}

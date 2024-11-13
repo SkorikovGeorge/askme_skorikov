@@ -62,25 +62,30 @@
                 <div class="d-flex flex-column">
                     <h3>Popular Tags</h3>
                     <div class="flex-wrap"> 
-                        <a href={% url 'tag' 'perl' %}><button type="button" class="badge text-bg-primary border-0 text-center">perl</button></a>
+                        {% block popular_tags %}
+                        {% comment %} <a href={% url 'tag' 'perl' %}><button type="button" class="badge text-bg-primary border-0 text-center">perl</button></a>
                         <a href={% url 'tag' 'python' %}><button type="button" class="badge text-bg-secondary border-0 text-center">python</button></a>
                         <a href={% url 'tag' 'TechnoPark' %}><button type="button" class="badge text-bg-success border-0 text-center">TechnoPark</button></a>
                         <a href={% url 'tag' 'MySQL' %}><button type="button" class="badge text-bg-danger border-0 text-center">MySQL</button></a>
                         <a href={% url 'tag' 'django' %}><button type="button" class="badge text-bg-warning border-0 text-center">django</button></a>
                         <a href={% url 'tag' 'Mail.Ru' %}><button type="button" class="badge text-bg-info border-0 text-center">Mail.Ru</button></a>
-                        <a href={% url 'tag' 'Voloshin' %}><button type="button" class="badge text-bg-light border-0 text-center">Voloshin</button></a>                           <a href={% url 'tag' 'Firefox' %}><button type="button" class="badge text-bg-dark border-0 text-center">Firefox</button>
-                        <a href={% url 'tag' 'C++' %}><button type="button" class="badge text-bg-primary border-0 text-center">C++</button></a>
+                        <a href={% url 'tag' 'Voloshin' %}><button type="button" class="badge text-bg-light border-0 text-center">Voloshin</button></a>
+                        <a href={% url 'tag' 'Firefox' %}><button type="button" class="badge text-bg-dark border-0 text-center">Firefox</button></a>
+                        <a href={% url 'tag' 'C++' %}><button type="button" class="badge text-bg-primary border-0 text-center">C++</button></a> {% endcomment %}
+                        {% endblock %}
                     </div>
                 </div>
 
                 <div class="d-flex flex-column">
                     <h3>Best Members</h3>
                     <div class="d-flex flex-column gap-1">
-                        <a href="#">Mr.Freeman</a>
+                        {% block best_members %}
+                        {% comment %} <a href="#">Mr.Freeman</a>
                         <a href="#">Dr.House</a>
                         <a href="#">Bender</a>
                         <a href="#">Queen Victoria</a>
-                        <a href="#">V.Pupkin</a>
+                        <a href="#">V.Pupkin</a> {% endcomment %}
+                        {% endblock %}
                     </div>
                 </div>
             </div>

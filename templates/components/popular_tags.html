@@ -1,0 +1,3 @@
+{% for tag in popular_tags %}
+<a href={% url 'tag' tag.title %}><button type="button" class="badge text-bg-warning border-0 text-center">{{ tag.title }}</button></a>
+{% endfor %}

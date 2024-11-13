@@ -2,13 +2,21 @@
 {% load static %}
 
 {% block heading %}
-<h2>Tag: {{ tag_name }}</h2>
+<h2>Tag: {{ tag.title }}</h2>
 {% endblock %}
 
 {% block content %}
     {% for question in questions %}
-    {% include "layouts/card.html" %}
+    {% include "components/card.html" %}
     {% endfor %}
 
-    {% include 'layouts/pagination.html' %}
+    {% include 'components/pagination.html' %}
+{% endblock %}
+
+{% block popular_tags %}
+    {% include "components/popular_tags.html" %}
+{% endblock %}
+
+{% block best_members %}
+    {% include "components/best_members.html" %}
 {% endblock %}
