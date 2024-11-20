@@ -6,15 +6,15 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class QuestionManager(models.Manager):
-    def get_queryset(self):
-        #.annotate(answers_count=Count('answers', distinct=True))
-        return super().get_queryset().annotate(likes=Sum('question_likes__like')).prefetch_related('tags')
+    # def get_queryset(self):
+    #     #.annotate(answers_count=Count('answers', distinct=True))
+    #     return super().get_queryset().annotate(likes=Sum('question_likes__like')).prefetch_related('tags')
         
     def get_new(self):
-        return self.order_by("-created_at")
+        return self.annotate(likes=Sum('question_likes__like')).prefetch_related('tags').order_by("-created_at")
     
     def get_hot(self):
-        return self.order_by('-likes')[:100]
+        return self.annotate(likes=Sum('question_likes__like')).prefetch_related('tags').order_by('-likes')[:100]
     
 class TagManager(models.Manager):
     def get_popular_tags(self):
@@ -38,7 +38,7 @@ class Tag(models.Model):
     objects = TagManager()
     
     def get_questions(self):
-        return self.questions.order_by("-created_at")
+        return self.questions.annotate(likes=Sum('question_likes__like')).prefetch_related('tags').order_by("-created_at")
     
     
 class Question(models.Model):
@@ -56,6 +56,9 @@ class Question(models.Model):
     def count_answers(self):
         return self.answers.count()
     
+    def sum_likes(self):
+        return self.question_likes.aggregate(likes = Sum('like'))["likes"]
+    
 class Answer(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="answers")
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
@@ -72,8 +75,8 @@ class QuestionLike(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="question_likes")
     like = models.IntegerField(choices=like_choices)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)  
-
+    updated_at = models.DateTimeField(auto_now=True)
+    
     class Meta:
         unique_together = ("profile", "question")
 

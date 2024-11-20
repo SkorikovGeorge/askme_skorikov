@@ -5,8 +5,11 @@ from app.models import Question, Tag, Profile
 from django.db.models import Count
 
 # QUESTIONS = list(Question.objects.get_new())
-POPULAR_TAGS = list(Tag.objects.get_popular_tags())
-BEST_MEMBERS = list(Profile.objects.get_best_members())
+
+def get_base_stats():    
+    popular_tags = list(Tag.objects.get_popular_tags())
+    best_members = list(Profile.objects.get_best_members())
+    return (popular_tags, best_members)
 
 def paginate(objects_list, request, per_page=10):
     paginator = Paginator(objects_list, per_page)
@@ -20,33 +23,41 @@ def paginate(objects_list, request, per_page=10):
 def index(request):
     questions = Question.objects.get_new()
     page = paginate(questions, request, 10)
-    return render(request, "index.html", context={"questions": page.object_list, "page_obj": page, "popular_tags": POPULAR_TAGS, "best_members": BEST_MEMBERS})
+    tags, members = get_base_stats()
+    return render(request, "index.html", context={"questions": page.object_list, "page_obj": page, "popular_tags": tags, "best_members": members})
 
 def question(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     answers = question.get_answers()
     page = paginate(answers, request, 8)
-    return render(request, "question.html", context={"question": question, "answers": page.object_list, "page_obj": page, "show_answers": True, "popular_tags": POPULAR_TAGS, "best_members": BEST_MEMBERS})
+    tags, members = get_base_stats()
+    return render(request, "question.html", context={"question": question, "answers": page.object_list, "page_obj": page, "show_answers": True, "popular_tags": tags, "best_members": members})
 
 def hot(request):
     questions = Question.objects.get_hot()
     page = paginate(questions, request, 10)
-    return render(request, "hot.html", context={"questions": page.object_list, "page_obj": page, "popular_tags": POPULAR_TAGS, "best_members": BEST_MEMBERS})
+    tags, members = get_base_stats()
+    return render(request, "hot.html", context={"questions": page.object_list, "page_obj": page, "popular_tags": tags, "best_members": members})
 
 def bytag(request, tag_name):
     tag = get_object_or_404(Tag, title=tag_name)
     questions = tag.get_questions()  
     page = paginate(questions, request, 10)
-    return render(request, "bytag.html", context={"questions": page.object_list, "page_obj": page, "tag": tag, "popular_tags": POPULAR_TAGS, "best_members": BEST_MEMBERS})
+    tags, members = get_base_stats()
+    return render(request, "bytag.html", context={"questions": page.object_list, "page_obj": page, "tag": tag, "popular_tags": tags, "best_members": members})
 
 def login(request):
-    return render(request, "login.html", context={"popular_tags": POPULAR_TAGS, "best_members": BEST_MEMBERS})
+    tags, members = get_base_stats()
+    return render(request, "login.html", context={"popular_tags": tags, "best_members": members})
 
 def signup(request):
-    return render(request, "signup.html", context={"popular_tags": POPULAR_TAGS, "best_members": BEST_MEMBERS})
+    tags, members = get_base_stats()
+    return render(request, "signup.html", context={"popular_tags": tags, "best_members": members})
 
 def ask(request):
-    return render(request, "ask.html", context={"popular_tags": POPULAR_TAGS, "best_members": BEST_MEMBERS})
+    tags, members = get_base_stats()
+    return render(request, "ask.html", context={"popular_tags": tags, "best_members": members})
 
 def settings(request):
-    return render(request, "settings.html", context={"popular_tags": POPULAR_TAGS, "best_members": BEST_MEMBERS})
+    tags, members = get_base_stats()
+    return render(request, "settings.html", context={"popular_tags": tags, "best_members": members})
