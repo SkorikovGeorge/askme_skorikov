@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block content %}
     <div class="card border-dark mb-3 w-100">
@@ -7,7 +8,7 @@
             <div class="d-flex gap-3 align-items-center">
                 <div class="d-flex flex-column justify-content-between align-items-center gap-2">
                     <div style="width: 150px; height: 150px;">
-                        <img class="img-thumbnail" src={% static "img/cat_pfp.jpg" %} alt="CardIcon">
+                        <img class="img-thumbnail" src={% static "img/cat_pfp.jpeg" %} alt="CardIcon">
                     </div>
                     {% comment %} <input type="number" class="form-control form-control-sm text-center" placeholder="5"
                             style="width: 50px; height: 30px;" aria-label="Number input"> {% endcomment %}
@@ -16,7 +17,7 @@
                 </div>
                 <div>
                     <h2 class="card-title">{{ question.title }}</h2>
-                    <p class="card-text">{{ question.text }}</p>
+                    <p class="card-text">{{ question.content }}</p>
                     <a href={% url 'question' question.id %} class="card-link">Answers({{ question.count_answers }})</a>
                     <div class="d-flex gap-2">
                         Tags:
@@ -42,13 +43,17 @@
 
 {% include 'components/pagination.html' %}
 
+{% if request.user.is_authenticated %}
 <div class="d-flex flex-column gap-2 w-100">
-    <div>
-        <label for="AnswerTextarea" class="form-label">Your Answer:</label>
-        <textarea class="form-control" id="AnswerTextarea" rows="4" style="max-height: 500px;"></textarea>
-    </div>
-    <button type="submit" class="btn btn-secondary">Answer</button>
+    <form class="was-validated w-100" method="POST" action="{% url "question" question.id %}">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button type="submit" class="btn btn-secondary w-100">Answer</button>
+    {% endbuttons %}
+    </form>
 </div>
+{% endif %}
 
 {% endblock %}
 

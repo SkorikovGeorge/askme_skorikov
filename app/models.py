@@ -1,8 +1,8 @@
 from django.db import models
 from django.urls import reverse
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Value
 from django.contrib.auth.models import User
-
+from django.db.models.functions import Coalesce
 # Create your models here.
 
 class QuestionManager(models.Manager):
@@ -11,14 +11,14 @@ class QuestionManager(models.Manager):
     #     return super().get_queryset().annotate(likes=Sum('question_likes__like')).prefetch_related('tags')
         
     def get_new(self):
-        return self.annotate(likes=Sum('question_likes__like')).prefetch_related('tags').order_by("-created_at")
+        return self.annotate(likes=Coalesce(Sum('question_likes__like'), Value(0))).prefetch_related('tags').order_by("-created_at")
     
     def get_hot(self):
-        return self.annotate(likes=Sum('question_likes__like')).prefetch_related('tags').order_by('-likes')[:100]
+        return self.annotate(likes=Coalesce(Sum('question_likes__like'), Value(0))).prefetch_related('tags').order_by('-likes')[:100]
     
 class TagManager(models.Manager):
     def get_popular_tags(self):
-        return self.annotate(rating=Count("questions")).order_by("rating")[:10]
+        return self.annotate(rating=Count("questions")).order_by("-rating")[:10]
     
 class ProfileManager(models.Manager):
     def get_best_members(self, count=10):
@@ -26,7 +26,7 @@ class ProfileManager(models.Manager):
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)    
     objects = ProfileManager()
@@ -51,13 +51,22 @@ class Question(models.Model):
     objects = QuestionManager()
     
     def get_answers(self):
-        return self.answers.annotate(likes=Count("answer_likes__id")).order_by("-likes")
+        return self.answers.annotate(likes=Count("answer_likes__id")).order_by("-likes", "created_at")
     
     def count_answers(self):
         return self.answers.count()
     
     def sum_likes(self):
-        return self.question_likes.aggregate(likes = Sum('like'))["likes"]
+        res = self.question_likes.aggregate(likes = Sum('like'))["likes"]
+        return res if res else 0
+    
+    def get_page_by_answer(self, answer):
+        answers = self.get_answers()
+        for i in range(len(answers)):
+            if answers[i].id == answer.id:
+                return i // 8 + 1
+        return 1
+            
     
 class Answer(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="answers")
@@ -65,6 +74,7 @@ class Answer(models.Model):
     content = models.TextField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)  
+        
 
 class QuestionLike(models.Model):
     like_choices = [

@@ -1,17 +1,22 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block heading %}
-<h2>Settings: LoggedProfile</h2>
-<div class="badge text-bg-danger text-wrap">
-    Sorry, this nickname already registred!!
-</div>
+<h2>Settings</h2>
 {% endblock %}
 
 {% block content %}
 <div class="d-flex flex-column gap-3 w-100">
-    <form class="was-validated col-5">
-        <div class="mb-3">
+    <form class="was-validated col-5" method="POST" action="{% url "settings" %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if request.user.profile.avatar %}
+            <img src="{{ request.user.profile.avatar.url }}" alt="Avatar" class="img-thumbnail mb-3" style="width: 150px; height: 150px;">
+        {% else %}
+            <img src={% static "img/cat_pfp.jpeg" %} alt="Avatar" class="img-thumbnail mb-3" style="width: 150px; height: 150px;">
+        {% endif %}
+        {% bootstrap_form form %}
+        {% comment %} <div class="mb-3">
             <label for="InputLogin" class="form-label">Login</label>
             <input type="text" class="form-control" id="InputLogin" value="dr_pepper" maxlength="35"
                    aria-describedby="login" required>
@@ -47,10 +52,11 @@
             <div class="invalid-feedback">
                 Please select a file.
             </div>
-        </div>
-
+        </div>{% endcomment %}
+        {% buttons %}
         <button type="submit" class="btn btn-secondary">Save</button>
-    </form>
+        {% endbuttons %}
+    </form> 
 </div>
 {% endblock %}
 

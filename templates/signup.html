@@ -1,17 +1,17 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block heading %}
 <h2>Registration</h2>
-<div class="badge text-bg-danger text-wrap">
-    Sorry, this email address already registred!!
-</div>
 {% endblock %}
 
 {% block content %}
 <div class="d-flex flex-column gap-3 w-100">
-    <form class="was-validated col-5">
-        <div class="mb-3">
+    <form class="was-validated col-5" method="POST" action={% url 'signup' %} enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% comment %} <div class="mb-3">
             <label for="InputLogin" class="form-label">Login</label>
             <input type="text" class="form-control" id="InputLogin" maxlength="35"
                     aria-describedby="login" required>
@@ -60,9 +60,10 @@
             <div class="invalid-feedback">
                 Please select a file.
             </div>
-        </div>
-
+        </div> {% endcomment %}
+        {% buttons %}
         <button type="submit" class="btn btn-secondary">Register</button>
+        {% endbuttons %}
     </form>
 </div>
 {% endblock %}
