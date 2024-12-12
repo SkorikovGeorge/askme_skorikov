@@ -22,7 +22,7 @@ class Command(BaseCommand):
         # self.generate_questions(ratio)
         # self.generate_answers(ratio)
         # self.generate_questions_likes(ratio)
-        # self.generate_answers_likes(ratio)
+        self.generate_answers_likes(ratio)
         self.stdout.write(self.style.SUCCESS("База успешно заполнена!"))
         
     def generate_profiles(self, ratio):
@@ -111,7 +111,8 @@ class Command(BaseCommand):
         for profile in all_profiles:
             unique_answers = random.sample(all_answers, 200)
             for answer in unique_answers:
-                likes.append(AnswerLike(profile_id=profile, answer_id=answer))
+                like = random.choice([1, -1])
+                likes.append(AnswerLike(profile_id=profile, answer_id=answer, like=like))
         AnswerLike.objects.bulk_create(likes)
                 
         

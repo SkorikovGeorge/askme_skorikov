@@ -51,7 +51,7 @@ class Question(models.Model):
     objects = QuestionManager()
     
     def get_answers(self):
-        return self.answers.annotate(likes=Count("answer_likes__id")).order_by("-likes", "created_at")
+        return self.answers.annotate(likes=Coalesce(Sum('answer_likes__like'), Value(0))).order_by("-likes", "created_at")
     
     def count_answers(self):
         return self.answers.count()
@@ -66,14 +66,35 @@ class Question(models.Model):
             if answers[i].id == answer.id:
                 return i // 8 + 1
         return 1
+    
+    def get_like_by_profile(self, profile):
+        question_likes = self.question_likes
+        try:
+            obj = question_likes.get(profile=profile)
+        except QuestionLike.DoesNotExist:
+            obj = None
+        return obj
             
     
 class Answer(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="answers")
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
     content = models.TextField(null=False, blank=False)
+    correct = models.BooleanField(null=True, blank=True, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)  
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def sum_likes(self):
+        res = self.answer_likes.aggregate(likes = Sum('like'))["likes"]
+        return res if res else 0
+    
+    def get_like_by_profile(self, profile):
+        answer_likes = self.answer_likes
+        try:
+            obj = answer_likes.get(profile=profile)
+        except AnswerLike.DoesNotExist:
+            obj = None
+        return obj
         
 
 class QuestionLike(models.Model):
@@ -86,13 +107,17 @@ class QuestionLike(models.Model):
     like = models.IntegerField(choices=like_choices)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
     class Meta:
         unique_together = ("profile", "question")
 
 class AnswerLike(models.Model):
+    like_choices = [
+        (1, "Like"),
+        (-1, "Dislike"),
+    ]
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="answer_likes")
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name="answer_likes")
+    like = models.IntegerField(choices=like_choices)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)  
     

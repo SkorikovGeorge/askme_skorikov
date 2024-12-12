@@ -11,20 +11,7 @@
     <form class="was-validated col-5" action="{% url 'login' %}?continue={{ request.GET.continue }}" method="POST">
         {% csrf_token %}
         {% bootstrap_form form %}
-        {% comment %} <div class="mb-3">
-            <label for="InputLogin" class="form-label">Login</label>
-            <input type="text" class="form-control" id="InputLogin" name="username" maxlength="35" required>
-            <div class="invalid-feedback">
-                Please enter a login.
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="InputPassword" class="form-label">Password</label>
-            <input type="password" class="form-control" id="InputPassword" name="password" maxlength="35" required>
-            <div class="invalid-feedback">
-                Please enter a password.
-            </div>
-        </div> {% endcomment %}
+
         {% buttons %}
         <button type="submit" class="btn btn-secondary">Submit</button>
         {% endbuttons %}

@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="card w-100" id="{{answer.id}}">
+<div class="card w-100" id="{{answer.id}}" data-item="{{ question.id }}">
     <div class="card-body d-flex justify-content-between align-items-center">
         <div class="d-flex gap-3 align-items-center">
             <div class="d-flex flex-column justify-content-between align-items-center gap-2">
@@ -24,7 +24,7 @@
                 {% comment %} <input type="number" class="form-control form-control-sm text-center" placeholder="5"
                         style="width: 50px; height: 30px;" aria-label="Number input"> {% endcomment %}
                 {% if not show_answers|default:False %}
-                <input type="text" class="form-control form-control-sm text-center border border-dark" 
+                <input type="text" class="form-control form-control-sm text-center border border-dark like-counter" 
                     value="{{ question.likes }}" style="width: 50px; height: 30px;" readonly>
                 {% else %}
                 <input type="text" class="form-control form-control-sm text-center border border-dark" 
@@ -55,10 +55,10 @@
         </div>
         {% if not show_answers|default:False %}
         <div class="d-flex flex-column gap-1 align-items-center">
-            <button type="button" class="btn btn-outline-success btn-sm"
-                    style="width: 35px; height: 35px;"><b>+</b></button>
-            <button type="button" class="btn btn-outline-danger btn-sm"
-                    style="width: 35px; height: 35px;"><b>-</b></button>
+            <button class="btn btn-outline-success btn-sm like-button"
+                style="width: 35px; height: 35px;"><b>+</b></button>
+            <button class="btn btn-outline-danger btn-sm dislike-button"
+                style="width: 35px; height: 35px;"><b>-</b></button>
         </div>
         {% endif %}
     </div>

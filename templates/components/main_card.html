@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="card border-dark mb-3 w-100 question-card" data-item="{{ question.id }}">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-3 align-items-center">
+            <div class="d-flex flex-column justify-content-between align-items-center gap-2">
+                <div style="width: 150px; height: 150px;">
+                    {% if question.profile.avatar %}
+                        <img src="{{ question.profile.avatar.url }}" alt="Avatar" class="img-thumbnail">
+                    {% else %}
+                        <img src={% static "img/cat_pfp.jpeg" %} alt="Avatar" class="img-thumbnail">
+                    {% endif %}
+                </div>
+                <input type="text" class="form-control form-control-sm text-center border border-dark like-counter" 
+                    value="{{ question.sum_likes }}" style="width: 50px; height: 30px;" readonly>
+            </div>
+            <div>
+                <h2 class="card-title">{{ question.title }}</h2>
+                <p class="card-text">{{ question.content }}</p>
+                <a href={% url 'question' question.id %} class="card-link">Answers({{ question.count_answers }})</a>
+                <div class="d-flex gap-2">
+                    Tags:
+                    {% for tag in question.tags.all %}
+                    <a href={% url 'tag' tag.title %} class="card-link m-0">{{ tag.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column gap-2 align-items-center">
+            <button class="btn btn-outline-success btn-sm like-button"
+                    style="width: 40px; height: 40px;"><b>+</b></button>
+            <button class="btn btn-outline-danger btn-sm dislike-button"
+                    style="width: 40px; height: 40px;"><b>-</b></button>
+        </div>
+    </div>
+</div>

@@ -11,4 +11,7 @@ urlpatterns = [
     path('settings/', views.settings, name="settings"),
     path('tag/<str:tag_name>/', views.bytag, name="tag"),
     path('question/<int:question_id>/', views.question, name="question"),
+    path('like/question/<int:question_id>/', views.question_like, name="question_like"),
+    path('like/answer/<int:answer_id>/', views.answer_like, name="answer_like"),
+    path('correct/answer/<int:answer_id>/', views.correct_answer, name="correct_answer"),
 ]

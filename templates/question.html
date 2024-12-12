@@ -3,42 +3,10 @@
 {% load bootstrap5 %}
 
 {% block content %}
-    <div class="card border-dark mb-3 w-100">
-        <div class="card-body d-flex justify-content-between align-items-center">
-            <div class="d-flex gap-3 align-items-center">
-                <div class="d-flex flex-column justify-content-between align-items-center gap-2">
-                    <div style="width: 150px; height: 150px;">
-                        <img class="img-thumbnail" src={% static "img/cat_pfp.jpeg" %} alt="CardIcon">
-                    </div>
-                    {% comment %} <input type="number" class="form-control form-control-sm text-center" placeholder="5"
-                            style="width: 50px; height: 30px;" aria-label="Number input"> {% endcomment %}
-                    <input type="text" class="form-control form-control-sm text-center border border-dark" 
-                        value="{{ question.sum_likes }}" style="width: 50px; height: 30px;" readonly>
-                </div>
-                <div>
-                    <h2 class="card-title">{{ question.title }}</h2>
-                    <p class="card-text">{{ question.content }}</p>
-                    <a href={% url 'question' question.id %} class="card-link">Answers({{ question.count_answers }})</a>
-                    <div class="d-flex gap-2">
-                        Tags:
-                        {% for tag in question.tags.all %}
-                        <a href={% url 'tag' tag.title %} class="card-link m-0">{{ tag.title }}</a>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex flex-column gap-1 align-items-center">
-                <button type="button" class="btn btn-outline-success btn-sm"
-                        style="width: 35px; height: 35px;"><b>+</b></button>
-                <button type="button" class="btn btn-outline-danger btn-sm"
-                        style="width: 35px; height: 35px;"><b>-</b></button>
-            </div>
-        </div>
-    </div>
+{% include 'components/main_card.html' %} 
 
 {% for answer in answers %}
-{% include "components/card.html"%}
+{% include "components/answer_card.html"%}
 {% endfor %}
 
 {% include 'components/pagination.html' %}

@@ -44,6 +44,11 @@ class SignUpForm(forms.ModelForm):
         
 class SettingsForm(forms.ModelForm):
     avatar = forms.ImageField(required=False)
+    clear_checkbox = forms.BooleanField(
+        label='Clear Image',
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
     
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -55,12 +60,14 @@ class SettingsForm(forms.ModelForm):
         user = super().save(commit=False)
         profile = user.profile
         
-        new_avatar = self.cleaned_data["avatar"]
-        if profile.avatar:
+        new_avatar = self.cleaned_data.get("avatar")
+        img_clear = self.cleaned_data.get("clear_checkbox")
+        if (img_clear or new_avatar) and profile.avatar:
             current_path = profile.avatar.path
             if default_storage.exists(current_path):
                 default_storage.delete(current_path)
-        profile.avatar = new_avatar if new_avatar else None
+            profile.avatar = None
+        profile.avatar = new_avatar if new_avatar else profile.avatar
         user.save()
         profile.save()
         return user

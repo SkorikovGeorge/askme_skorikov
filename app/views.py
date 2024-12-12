@@ -1,20 +1,25 @@
-from django.http import HttpResponse
+import json
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from app.forms import AnswerForm, LoginForm, SignUpForm, SettingsForm, AskForm
-from app.models import Question, Tag, Profile
+from app.models import Question, Tag, Profile, QuestionLike, Answer, AnswerLike
 from django.db.models import Count
 from django.contrib import auth
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
-QUESTIONS = list(Question.objects.get_new())
+# QUESTIONS = list(Question.objects.get_new())
+TAGS = list(Tag.objects.get_popular_tags())
+MEMBERS = list(Profile.objects.get_best_members())
 
 
 def get_base_stats():    
-    popular_tags = list(Tag.objects.get_popular_tags())
-    best_members = list(Profile.objects.get_best_members())
-    return (popular_tags, best_members)
+    # popular_tags = list(Tag.objects.get_popular_tags())
+    # best_members = list(Profile.objects.get_best_members())
+    # return (popular_tags, best_members)
+    return (TAGS, MEMBERS)
 
 def paginate(objects_list, request, per_page=10):
     paginator = Paginator(objects_list, per_page)
@@ -26,8 +31,8 @@ def paginate(objects_list, request, per_page=10):
     return page
 
 def index(request):
-    # questions = Question.objects.get_new()
-    questions = QUESTIONS
+    questions = Question.objects.get_new()
+    # questions = QUESTIONS
     page = paginate(questions, request, 10)
     tags, members = get_base_stats()
     return render(request, "index.html", context={"questions": page.object_list, "page_obj": page, "popular_tags": tags, "best_members": members})
@@ -124,3 +129,71 @@ def settings(request):
     tags, members = get_base_stats()
     return render(request, "settings.html", context={"form": form, "popular_tags": tags, "best_members": members})
 
+
+@require_POST
+@login_required
+def question_like(request, question_id):
+    try:
+        body = json.loads(request.body)
+        type = body.get("type")
+        
+        profile = request.user.profile
+        question = Question.objects.get(pk=question_id)
+        cur = question.get_like_by_profile(profile=profile)
+        if not cur:
+            QuestionLike.objects.create(profile=profile, question=question, like=type)
+        elif cur.like == type:
+            info = cur.delete()
+        else:
+            info = cur.delete()
+            QuestionLike.objects.create(profile=profile, question=question, like=type)
+        return JsonResponse({ 
+            'likes_count': question.sum_likes(),
+            'code': 200,
+        })
+    except:
+        return JsonResponse({ 
+            'likes_count': question.sum_likes(),
+            'code': 400,
+        })
+        
+
+@require_POST
+@login_required
+def answer_like(request, answer_id):
+    try:
+        body = json.loads(request.body)
+        type = body.get("type")
+        
+        profile = request.user.profile
+        answer = Answer.objects.get(pk=answer_id)
+        cur = answer.get_like_by_profile(profile=profile)
+        if not cur:
+            AnswerLike.objects.create(profile=profile, answer=answer, like=type)
+        elif cur.like == type:
+            info = cur.delete()
+        else:
+            info = cur.delete()
+            AnswerLike.objects.create(profile=profile, answer=answer, like=type)
+        return JsonResponse({ 
+            'likes_count': answer.sum_likes(),
+            'code': 200,
+        })
+    except:
+        return JsonResponse({ 
+            'likes_count': answer.sum_likes(),
+            'code': 400,
+        })
+        
+
+@require_POST
+@login_required
+def correct_answer(request, answer_id):
+    profile = request.user.profile
+    answer = Answer.objects.get(pk=answer_id)
+    if answer.question.profile == profile:
+        answer.correct = not(answer.correct)
+        answer.save()
+    return JsonResponse({ 
+        'is_correct': answer.correct,
+    })
