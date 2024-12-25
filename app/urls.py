@@ -14,4 +14,5 @@ urlpatterns = [
     path('like/question/<int:question_id>/', views.question_like, name="question_like"),
     path('like/answer/<int:answer_id>/', views.answer_like, name="answer_like"),
     path('correct/answer/<int:answer_id>/', views.correct_answer, name="correct_answer"),
+    path('search/', views.search_questions, name='search_questions'),
 ]

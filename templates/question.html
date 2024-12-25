@@ -5,9 +5,13 @@
 {% block content %}
 {% include 'components/main_card.html' %} 
 
-{% for answer in answers %}
-{% include "components/answer_card.html"%}
-{% endfor %}
+<span class="d-flex flex-column gap-3 align-items-center w-100" id="answers_container"> 
+    {% for answer in answers %}
+    {% include "components/answer_card.html"%}
+    {% endfor %}
+</span>
+
+{% include "components/hidden_answer_card.html" %}
 
 {% include 'components/pagination.html' %}
 
@@ -31,4 +35,8 @@
 
 {% block best_members %}
     {% include "components/best_members.html" %}
+{% endblock %}
+
+{% block centrifugo %}
+    {% include "components/centrifugo.html" %}
 {% endblock %}

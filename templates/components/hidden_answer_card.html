@@ -1,0 +1,38 @@
+{% load static %}
+
+<div class="card w-100 real-time-template answer-card {% if answer.correct %}border-success border-2{% endif %}" id="{{answer.id}}" data-item="{{ answer.id }}" style="display: none;">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-3 align-items-center">
+            <div class="d-flex flex-column justify-content-between align-items-center gap-2">
+                <div style="width: 100px; height: 100px;">
+{% comment %} avatar {% endcomment %}
+                    <img src={% static "img/cat_pfp.jpeg" %} alt="Avatar" class="img-thumbnail" id="avatar-image">
+                </div>
+                <input type="text" class="form-control form-control-sm text-center border border-dark like-counter" 
+                    value="0" style="width: 50px; height: 30px;" readonly>
+            </div>
+            <div>
+                <p class="card-text content">-</p>
+                <div class="form-check">
+                    {% if request.user.profile == question.profile %}
+                    <input class="form-check-input correct-answer" type="checkbox" {% if answer.correct %}checked{% endif %} id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Correct!
+                    </label>
+                    {% elif answer.correct %} 
+                    <input class="form-check-input" type="checkbox" id="flexCheckDefault" checked disabled>
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Correct!
+                    </label>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column gap-1 align-items-center">
+            <button class="btn btn-outline-success btn-sm like-button"
+                style="width: 35px; height: 35px;"><b>+</b></button>
+            <button class="btn btn-outline-danger btn-sm dislike-button"
+                style="width: 35px; height: 35px;"><b>-</b></button>
+        </div>
+    </div>
+</div>

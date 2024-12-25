@@ -17,12 +17,25 @@
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+
+            <div class="d-flex gap-2">
+                <div class="dropdown">
+                    <input class="form-control me-2 dropdown-toggle" type="search" id="search-input" placeholder="Search" aria-label="Search" aria-expanded="false">
+                    <ul id="search-results" class="dropdown-menu"></ul>
+                </div>
+                {% if request.user.is_authenticated %}
+                <a href={% url 'ask' %}><button class="btn btn-outline-success" type="button">Ask!</button></a>
+                {% endif %}
+            </div>
+            {% comment %} <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" id="search-input" aria-label="Search">
                 {% if request.user.is_authenticated %}
                 <a href={% url 'ask' %}><button class="btn btn-outline-success" type="button">Ask!</button></a>
                 {% endif %}
             </form>
+
+            <ul id="search-results" style="display:none;"></ul> {% endcomment %}
+            
             {% if request.user.is_authenticated %}
             <div class="d-flex gap-2">
                 {% if request.user.profile.avatar %}
@@ -70,15 +83,6 @@
                     <h3>Popular Tags</h3>
                     <div class="flex-wrap"> 
                         {% block popular_tags %}
-                        {% comment %} <a href={% url 'tag' 'perl' %}><button type="button" class="badge text-bg-primary border-0 text-center">perl</button></a>
-                        <a href={% url 'tag' 'python' %}><button type="button" class="badge text-bg-secondary border-0 text-center">python</button></a>
-                        <a href={% url 'tag' 'TechnoPark' %}><button type="button" class="badge text-bg-success border-0 text-center">TechnoPark</button></a>
-                        <a href={% url 'tag' 'MySQL' %}><button type="button" class="badge text-bg-danger border-0 text-center">MySQL</button></a>
-                        <a href={% url 'tag' 'django' %}><button type="button" class="badge text-bg-warning border-0 text-center">django</button></a>
-                        <a href={% url 'tag' 'Mail.Ru' %}><button type="button" class="badge text-bg-info border-0 text-center">Mail.Ru</button></a>
-                        <a href={% url 'tag' 'Voloshin' %}><button type="button" class="badge text-bg-light border-0 text-center">Voloshin</button></a>
-                        <a href={% url 'tag' 'Firefox' %}><button type="button" class="badge text-bg-dark border-0 text-center">Firefox</button></a>
-                        <a href={% url 'tag' 'C++' %}><button type="button" class="badge text-bg-primary border-0 text-center">C++</button></a> {% endcomment %}
                         {% endblock %}
                     </div>
                 </div>
@@ -87,13 +91,11 @@
                     <h3>Best Members</h3>
                     <div class="d-flex flex-column gap-1">
                         {% block best_members %}
-                        {% comment %} <a href="#">Mr.Freeman</a>
-                        <a href="#">Dr.House</a>
-                        <a href="#">Bender</a>
-                        <a href="#">Queen Victoria</a>
-                        <a href="#">V.Pupkin</a> {% endcomment %}
                         {% endblock %}
                     </div>
+                    {% block centrifugo %}
+
+                    {% endblock %}
                 </div>
             </div>
         </div>
@@ -107,5 +109,6 @@
 
 <script src={% static "js/bootstrap.bundle.min.js" %}></script>
 <script src={% static "js/like.js" %}></script>
+<script src={% static "js/search.js" %}></script>
 </body>
 </html>

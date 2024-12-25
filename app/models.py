@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.urls import reverse
 from django.db.models import Sum, Count, Value
@@ -18,11 +19,14 @@ class QuestionManager(models.Manager):
     
 class TagManager(models.Manager):
     def get_popular_tags(self):
-        return self.annotate(rating=Count("questions")).order_by("-rating")[:10]
-    
+        three_months = timezone.now() - timezone.timedelta(days=90)
+        return self.filter(questions__created_at__gte=three_months).annotate(rating=Count("questions")).order_by("-rating")[:10]
+
 class ProfileManager(models.Manager):
     def get_best_members(self, count=10):
-        return self.annotate(answer_likes_count=Count('answers__answer_likes')).order_by('-answer_likes_count')[:count]
+        week = timezone.now() - timezone.timedelta(days=7)
+        return self.filter(answers__created_at__gte=week, questions__created_at__gte=week).annotate(
+            rating=Count('answers__answer_likes') + Count('questions__question_likes')).order_by('-rating')[:count]
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -74,6 +78,9 @@ class Question(models.Model):
         except QuestionLike.DoesNotExist:
             obj = None
         return obj
+
+    def get_absolute_url(self):
+       return reverse('question', kwargs={'question_id': self.pk})  
             
     
 class Answer(models.Model):

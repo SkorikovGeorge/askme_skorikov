@@ -1,0 +1,35 @@
+<div id="counter">-</div>
+<script src="https://unpkg.com/centrifuge@5.0.1/dist/centrifuge.js"></script>
+<script type="text/javascript">
+
+const centrifuge = new Centrifuge("{{ centrifugo.url }}", {
+    token: "{{ centrifugo.token }}"
+});
+
+centrifuge.on('connecting', function (ctx) {
+    console.log(`connecting: ${ctx.code}, ${ctx.reason}`);
+}).on('connected', function (ctx) {
+    console.log(`connected over ${ctx.transport}`);
+}).on('disconnected', function (ctx) {
+    console.log(`disconnected: ${ctx.code}, ${ctx.reason}`);
+}).connect();
+
+const sub = centrifuge.newSubscription("{{ ws_channel_name }}");
+
+sub.on('publication', function (ctx) {
+    const answersContainer = document.getElementById("answers_container");
+    const answerElement = document.getElementsByClassName("real-time-template");
+    const clonedElement = answerElement[0].cloneNode(true);
+    clonedElement.querySelector(".content").innerHTML = ctx.data.content;
+    clonedElement.style.display = "block";
+    clonedElement.id = ctx.data.id;
+    clonedElement.dataset.item = ctx.data.id;
+
+    const avatarImage = clonedElement.querySelector("#avatar-image");
+    if (ctx.data.avatar_url != "None") {
+        avatarImage.src = ctx.data.avatar_url;
+    } 
+    answersContainer.appendChild(clonedElement);
+    setEvents();
+}).subscribe();
+</script>
